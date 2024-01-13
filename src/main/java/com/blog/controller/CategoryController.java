@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,7 +36,7 @@ public class CategoryController {
 	}
 
 	// update
-	@PostMapping("/{categoryId}")
+	@PutMapping("/{categoryId}")
 	public ResponseEntity<CategoryDto> updateCategory(@RequestBody CategoryDto categoryDto,
 			@PathVariable Integer categoryId) {
 		CategoryDto updatedCategory = this.categoryService.updateCategory(categoryDto, categoryId);
@@ -52,6 +53,17 @@ public class CategoryController {
 				HttpStatus.OK);
 	}
 
+	// get all
+
+	@GetMapping("/")
+	public ResponseEntity<List<CategoryDto>> getAllCategory() {
+
+		List<CategoryDto> list = this.categoryService.getAllCategories();
+
+		return new ResponseEntity<List<CategoryDto>>(list, HttpStatus.OK);
+
+	}
+
 	// get
 	@GetMapping("/{categoryId}")
 	public ResponseEntity<CategoryDto> getCategory(@PathVariable Integer categoryId) {
@@ -61,13 +73,4 @@ public class CategoryController {
 		return new ResponseEntity<CategoryDto>(categoryDto, HttpStatus.OK);
 	}
 
-	// get all
-
-	@GetMapping("/")
-	public ResponseEntity<List<CategoryDto>> getAllCategory(@PathVariable Integer categoryId) {
-
-		List<CategoryDto> list = this.categoryService.getAllCategories();
-
-		return new ResponseEntity<List<CategoryDto>>(list, HttpStatus.OK);
-	}
 }
