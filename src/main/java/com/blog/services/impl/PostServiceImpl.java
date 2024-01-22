@@ -57,25 +57,43 @@ public class PostServiceImpl implements PostService {
 	@Override
 	public PostDto updatePost(PostDto postDto, Integer postId) {
 
-		return null;
+		Post post = this.postRepo.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
+
+		post.setTitle(postDto.getTitle());
+		post.setContent(postDto.getContent());
+		//post.setImageName(postDto.getImageName());
+
+		Post updatedPost = this.postRepo.save(post);
+		return this.modelMapper.map(updatedPost, PostDto.class);
 	}
 
 	@Override
 	public void deletePost(Integer postId) {
-		// TODO Auto-generated method stub
+
+		Post post = this.postRepo.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
+
+		this.postRepo.delete(post);
 
 	}
 
 	@Override
 	public List<PostDto> getAllPost() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Post> list = this.postRepo.findAll();
+		List<PostDto> posts = list.stream().map((post) -> this.modelMapper.map(post, PostDto.class))
+				.collect(Collectors.toList());
+
+		return posts;
 	}
 
 	@Override
 	public PostDto getPostById(Integer postId) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Post post = this.postRepo.findById(postId)
+				.orElseThrow(() -> new ResourceNotFoundException("Post", "postId", postId));
+
+		return this.modelMapper.map(post, PostDto.class);
 	}
 
 	@Override
@@ -83,9 +101,9 @@ public class PostServiceImpl implements PostService {
 
 		Category cat = this.categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "CategoryId", categoryId));
-			
+
 		List<Post> list = this.postRepo.findByCategory(cat);
-			
+
 		List<PostDto> posts = list.stream().map((post) -> this.modelMapper.map(post, PostDto.class))
 				.collect(Collectors.toList());
 
